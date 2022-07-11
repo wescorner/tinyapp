@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/wescorner/tinyapp/issues"
   },
-  "homepage": "https://github.com/wescorner/tinyapp#readme"
+  "homepage": "https://github.com/wescorner/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
 }
