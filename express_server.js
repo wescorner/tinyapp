@@ -17,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
+  test: "http://www.reddit.com",
 };
 
 app.get("/", (req, res) => {
@@ -41,6 +42,14 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+
+app.post("/urls/:id/delete", (req, res) => {
+  // console.log(req.params);
+  console.log("deleted ", req.params.id, urlDatabase[req.params.id]);
+
+  delete urlDatabase[req.params.id];
+  res.redirect("/urls");
 });
 
 app.get("/urls/:id", (req, res) => {
