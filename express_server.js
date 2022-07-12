@@ -45,7 +45,6 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  // console.log(req.params);
   console.log("deleted ", req.params.id, urlDatabase[req.params.id]);
 
   delete urlDatabase[req.params.id];
@@ -58,6 +57,12 @@ app.get("/urls/:id", (req, res) => {
     longURL: urlDatabase[req.params.id],
   };
   res.render("urls_show", templateVars);
+});
+
+app.post("/urls/:id", (req, res) => {
+  console.log("body", req.body);
+  urlDatabase[req.params.id] = req.body.id;
+  res.redirect(`/urls/${req.params.id}`);
 });
 
 app.get("/u/:id", (req, res) => {
