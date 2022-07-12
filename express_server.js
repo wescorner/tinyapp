@@ -60,7 +60,6 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  console.log("body", req.body);
   urlDatabase[req.params.id] = req.body.id;
   res.redirect(`/urls/${req.params.id}`);
 });
