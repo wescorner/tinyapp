@@ -2,7 +2,17 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
+const generateRandomString = function () {
+  let result = "";
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456879";
+  for (let i = 0; i < 5; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
 app.set("view engine", "ejs");
+
+app.use(express.urlencoded({ extended: true }));
 
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
@@ -18,12 +28,9 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-app.get("/urls/:id", (req, res) => {
-  const templateVars = {
-    id: req.params.id,
-    longURL: urlDatabase[req.params.id],
-  };
-  res.render("urls_show", templateVars);
+app.post("/urls", (req, res) => {
+  console.log(req.body);
+  res.send("OK");
 });
 
 app.get("/urls/new", (req, res) => {
@@ -32,6 +39,14 @@ app.get("/urls/new", (req, res) => {
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+
+app.get("/urls/:id", (req, res) => {
+  const templateVars = {
+    id: req.params.id,
+    longURL: urlDatabase[req.params.id],
+  };
+  res.render("urls_show", templateVars);
 });
 
 app.get("/hello", (req, res) => {
