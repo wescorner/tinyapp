@@ -98,6 +98,11 @@ app.get("/u/:id", (req, res) => {
   res.redirect(longURL);
 });
 
+app.get("/login", (req, res) => {
+  const templateVars = { user: users[req.cookies["user_id"]] };
+  res.render("login", templateVars);
+});
+
 app.post("/login", (req, res) => {
   app.use(express.json());
   res.cookie("username", req.body.username);
