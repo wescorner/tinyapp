@@ -62,6 +62,22 @@ const urlsForUser = function (id) {
   return result;
 };
 
+/*
+  !-------------------------------------------------------------------------------------------!  
+  TODO: install cookie-session middleware
+  TODO: switch to encrypted cookies
+  TODO: refactor helper functions for testing
+  TODO: write mocha test cases for helper functions
+  TODO: install method-override
+  TODO: use method-override to modify relevent routes to PUT or DELETE
+  TODO: keep track of how many times a given shortURL is visited and display it
+  TODO: keep track of how many unique visitors visit each url and display with total visitors
+  TODO: keep track of every visit and display list on URL edit page
+  TODO: clean up css and styling
+  ? Think of new features/libraries to possibly add
+  !-------------------------------------------------------------------------------------------!
+  */
+
 app.get("/", (req, res) => {
   res.redirect("/urls");
 });
