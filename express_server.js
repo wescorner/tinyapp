@@ -4,14 +4,6 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = 8080; // default port 8080
 
-const generateRandomString = function () {
-  let result = "";
-  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456879";
-  for (let i = 0; i < 6; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
 app.set("view engine", "ejs");
 
 app.use(express.urlencoded({ extended: true }));
@@ -33,6 +25,24 @@ const users = {
     email: "user2@example.com",
     password: "dishwasher-funk",
   },
+};
+
+const generateRandomString = function () {
+  let result = "";
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456879";
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+};
+
+const findUserByEmail = function (email) {
+  for (const i in users) {
+    if (email === users[i].email) {
+      return users[i];
+    }
+  }
+  return null;
 };
 
 app.get("/", (req, res) => {
@@ -109,6 +119,12 @@ app.post("/register", (req, res) => {
   const id = generateRandomString();
   const email = req.body.email;
   const password = req.body.password;
+  if (email.length === 0 || password.length === 0) {
+    return res.status(400).send("Invalid Email or Password");
+  }
+  if (findUserByEmail(email) !== null) {
+    return res.status(400).send("User already exists");
+  }
   users[id] = { id, email, password };
   res.cookie("user_id", id);
   res.redirect("/urls");
