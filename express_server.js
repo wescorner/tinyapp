@@ -99,12 +99,10 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
-app.post("/urls/:id/delete", (req, res) => {
-  delete urlDatabase[req.params.id];
-  res.redirect("/urls");
-});
-
 app.get("/urls/:id", (req, res) => {
+  if (!urlDatabase[req.params.id]) {
+    return res.status(404).send("This URL ID does not exist!");
+  }
   if (!req.cookies["user_id"]) {
     return res.status(400).send("Must be logged in to view URL's");
   }
@@ -119,8 +117,31 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.post("/urls/:id/delete", (req, res) => {
+  if (!urlDatabase[req.params.id]) {
+    return res.status(400).send("This URL ID does not exist");
+  }
+  if (!req.cookies["user_id"]) {
+    return res.status(400).send("Must be logged in to delete URLs");
+  }
+  if (req.cookies["user_id"] !== urlDatabase[req.params.id].userID) {
+    return res.status(400).send("Can only delete URLs that you own");
+  }
+  delete urlDatabase[req.params.id];
+  res.redirect("/urls");
+});
+
 app.post("/urls/:id", (req, res) => {
-  urlDatabase[req.params.id] = req.body.id;
+  if (!urlDatabase[req.params.id]) {
+    return res.status(400).send("This URL ID does not exist");
+  }
+  if (!req.cookies["user_id"]) {
+    return res.status(400).send("Must be logged in to edit URLs");
+  }
+  if (req.cookies["user_id"] !== urlDatabase[req.params.id].userID) {
+    return res.status(400).send("Can only edit URLs that you own");
+  }
+  urlDatabase[req.params.id].longURL = req.body.id;
   res.redirect(`/urls/${req.params.id}`);
 });
 
