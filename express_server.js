@@ -104,9 +104,16 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  app.use(express.json());
-  res.cookie("username", req.body.username);
-  const templateVars = { username: req.cookies["username"] };
+  // app.use(express.json());
+  const user = findUserByEmail(req.body.email);
+  if (user === null) {
+    return res.status(403).send("User not found");
+  }
+  if (user.password !== req.body.password) {
+    return res.status(403).send("Incorrect password");
+  }
+  res.cookie("user_id", user.id);
+  // const templateVars = { user: req.cookies["user_id"] };
   res.redirect("/urls");
 });
 
