@@ -18,34 +18,38 @@
   </head>
   <body>
     <%- include('partials/_header') %>
-    <main style="margin: 1em;">
-      <h3>My URLs</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Short URL ID</th>
-            <th scope="col">Long URL</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (let id in urls) { %>
+    <% if (!user){ %>
+      <h3>Please Login or Register to view URL's</h3>
+    <% }else{ %> 
+      <main style="margin: 1em;">
+        <h3>My URLs</h3>
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= id %></form></td>
-              <td><%= urls[id] %></td>
-              <form method="GET" action="/urls/<%=id%>">
-                <td><button type="submit" class="btn btn-outline-primary" >Edit</button></td>
-              </form>
-              <form method="POST" action="/urls/<%=id%>/delete">
-                <td><button type="submit" name="id" class="btn btn-outline-danger" >Delete</button></td>
-              </form>
+              <th scope="col">Short URL ID</th>
+              <th scope="col">Long URL</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
             </tr>
-          <% } %>
-        </tbody>
-        
-      </table>
-    </main>
+          </thead>
+          <tbody>
+            <% for (let id in urls) { %>
+              <tr>
+                <td><%= id %></form></td>
+                <td><%= urls[id].longURL %></td>
+                <form method="GET" action="/urls/<%=id%>">
+                  <td><button type="submit" class="btn btn-outline-primary" >Edit</button></td>
+                </form>
+                <form method="POST" action="/urls/<%=id%>/delete">
+                  <td><button type="submit" name="id" class="btn btn-outline-danger" >Delete</button></td>
+                </form>
+              </tr>
+            <% } %>
+          </tbody>
+          
+        </table>
+      </main>
+    <% } %>
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
