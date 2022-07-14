@@ -8,8 +8,8 @@ const PORT = 8080; // default port 8080
 
 app.set("view engine", "ejs");
 
+//*MIDDLEWARE
 app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
 app.use(
   cookieSession({
     name: "user_id",
@@ -18,19 +18,11 @@ app.use(
   })
 );
 
-const urlDatabase = {
-  b2xVn2: {
-    longURL: "http://www.lighthouselabs.ca",
-    userID: "userRandomID",
-  },
-  "9sm5xK": {
-    longURL: "http://www.google.com",
-    userID: "userRandomID",
-  },
-};
-
+//*GLOBAL VARIABLES
+const urlDatabase = {};
 const users = {};
 
+//*HELPER FUNCTIONS
 const generateRandomString = function () {
   let result = "";
   let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456879";
@@ -61,7 +53,6 @@ const urlsForUser = function (id) {
 
 /*
   !-------------------------------------------------------------------------------------------!  
-  TODO: switch to encrypted cookies
   TODO: refactor helper functions for testing
   TODO: write mocha test cases for helper functions
   TODO: install method-override
@@ -69,15 +60,18 @@ const urlsForUser = function (id) {
   TODO: keep track of how many times a given shortURL is visited and display it
   TODO: keep track of how many unique visitors visit each url and display with total visitors
   TODO: keep track of every visit and display list on URL edit page
+  TODO: re-test ALL functionality
   TODO: clean up css and styling
   ? Think of new features/libraries to possibly add
   !-------------------------------------------------------------------------------------------!
   */
 
+//*ROUTES
 app.get("/", (req, res) => {
   res.redirect("/urls");
 });
 
+//Show all URLs
 app.get("/urls", (req, res) => {
   const templateVars = {
     urls: urlsForUser(req.session["user_id"]),
@@ -86,6 +80,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//Add new URL
 app.post("/urls", (req, res) => {
   if (!req.session["user_id"]) {
     return res.status(400).send("Must be logged in to add new URL's");
@@ -98,6 +93,7 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${id}`);
 });
 
+//Show form for adding new URL
 app.get("/urls/new", (req, res) => {
   if (!req.session["user_id"]) {
     return res.redirect("/login");
@@ -112,6 +108,7 @@ app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
 
+//Show single URL by ID
 app.get("/urls/:id", (req, res) => {
   if (!urlDatabase[req.params.id]) {
     return res.status(404).send("This URL ID does not exist!");
@@ -130,6 +127,7 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+//Delete single URL by ID
 app.post("/urls/:id/delete", (req, res) => {
   if (!urlDatabase[req.params.id]) {
     return res.status(400).send("This URL ID does not exist");
@@ -144,6 +142,7 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+//Update single URL by ID
 app.post("/urls/:id", (req, res) => {
   if (!urlDatabase[req.params.id]) {
     return res.status(400).send("This URL ID does not exist");
@@ -158,11 +157,13 @@ app.post("/urls/:id", (req, res) => {
   res.redirect(`/urls/${req.params.id}`);
 });
 
+//Redirect short URL to long URL
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id].longURL;
   res.redirect(longURL);
 });
 
+//Show form for Login
 app.get("/login", (req, res) => {
   if (req.session["user_id"]) {
     return res.redirect("/urls");
@@ -171,12 +172,12 @@ app.get("/login", (req, res) => {
   res.render("login", templateVars);
 });
 
+//Login via email and password
 app.post("/login", (req, res) => {
   const user = findUserByEmail(req.body.email);
   if (user === null) {
     return res.status(403).send("User not found");
   }
-
   if (!bcrypt.compareSync(req.body.password, user.password)) {
     return res.status(403).send("Incorrect password");
   }
@@ -184,11 +185,13 @@ app.post("/login", (req, res) => {
   res.redirect("/urls");
 });
 
+//Logout current user
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
+//Show form for registering new user
 app.get("/register", (req, res) => {
   if (req.session["user_id"]) {
     return res.redirect("/urls");
@@ -197,6 +200,7 @@ app.get("/register", (req, res) => {
   res.render("register", templateVars);
 });
 
+//Register with email and password
 app.post("/register", (req, res) => {
   const id = generateRandomString();
   const email = req.body.email;
