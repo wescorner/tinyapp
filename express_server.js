@@ -1,8 +1,5 @@
 /*
   !-------------------------------------------------------------------------------------------!  
-  TODO: refactor helper functions for testing
-  TODO: write mocha test cases for helper functions
-  TODO: install method-override
   TODO: use method-override to modify relevent routes to PUT or DELETE
   TODO: npm morgan
   TODO: keep track of how many times a given shortURL is visited and display it
@@ -16,9 +13,9 @@
   !-------------------------------------------------------------------------------------------!
   */
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
+const methodOverride = require("method-override");
 const {
   generateRandomString,
   findUserByEmail,
@@ -32,6 +29,7 @@ app.set("view engine", "ejs");
 
 //*MIDDLEWARE
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 app.use(
   cookieSession({
     name: "user_id",
@@ -52,7 +50,7 @@ app.get("/", (req, res) => {
 //Show all URLs
 app.get("/urls", (req, res) => {
   const templateVars = {
-    urls: urlsForUser(req.session["user_id"]),
+    urls: urlsForUser(req.session["user_id"], urlDatabase),
     user: users[req.session["user_id"]],
   };
   res.render("urls_index", templateVars);
@@ -106,7 +104,7 @@ app.get("/urls/:id", (req, res) => {
 });
 
 //Delete single URL by ID
-app.post("/urls/:id/delete", (req, res) => {
+app.delete("/urls/:id/delete", (req, res) => {
   if (!urlDatabase[req.params.id]) {
     return res.status(400).send("This URL ID does not exist");
   }
@@ -121,7 +119,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 //Update single URL by ID
-app.post("/urls/:id", (req, res) => {
+app.put("/urls/:id", (req, res) => {
   if (!urlDatabase[req.params.id]) {
     return res.status(400).send("This URL ID does not exist");
   }

@@ -16,11 +16,11 @@ const findUserByEmail = function (email, database) {
   return undefined;
 };
 
-const urlsForUser = function (id) {
+const urlsForUser = function (id, database) {
   const result = {};
-  for (const i in urlDatabase) {
-    if (id === urlDatabase[i].userID) {
-      result[i] = urlDatabase[i];
+  for (const i in database) {
+    if (id === database[i].userID) {
+      result[i] = database[i];
     }
   }
   return result;

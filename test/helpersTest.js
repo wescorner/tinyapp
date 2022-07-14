@@ -1,5 +1,5 @@
 const { assert } = require("chai");
-const { findUserByEmail } = require("../helpers.js");
+const { findUserByEmail, urlsForUser } = require("../helpers.js");
 
 const testUsers = {
   userRandomID: {
@@ -14,6 +14,13 @@ const testUsers = {
   },
 };
 
+const testURLS = {
+  testID: {
+    longURL: "http://www.example.com",
+    userID: "userID",
+  },
+};
+
 describe("findUserByEmail", function () {
   it("should return a user with valid email", function () {
     const user = findUserByEmail("user@example.com", testUsers);
@@ -23,5 +30,13 @@ describe("findUserByEmail", function () {
   it("should return undefined for an email that doesn't exist", function () {
     const user = findUserByEmail("test@example.com", testUsers);
     assert.isUndefined(user);
+  });
+});
+
+describe("urlsForUser", function () {
+  it("should return a URL for valid user id", function () {
+    const url = urlsForUser("userID", testURLS).testID.longURL;
+    const expectedURL = "http://www.example.com";
+    assert.equal(expectedURL, url);
   });
 });
