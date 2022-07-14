@@ -21,6 +21,26 @@
           Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
         </p>
         <p>Total Visits: <%= totalVisits %></p>
+        <p>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            View Logs
+          </button>
+        </p>
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body">
+            <table class="table">
+              <tbody>
+                <% for (let log of logList) { %>
+                  <tr>
+                    <td>
+                      Visitor ID: <%= log.visitorID %> at: <%= log.date %>
+                    </td>
+                  </tr>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <div class="card-footer text-muted">
         <h4>Edit</h4>

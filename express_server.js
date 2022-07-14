@@ -1,9 +1,6 @@
 /*
   !-------------------------------------------------------------------------------------------!  
-  TODO: npm morgan
-  TODO: keep track of how many times a given shortURL is visited and display it
   TODO: keep track of how many unique visitors visit each url and display with total visitors
-  TODO: keep track of every visit and display list on URL edit page
   TODO: use alerts instead of res.send() for displaying error messages
   TODO: add sanitization to user's email and password
   TODO: re-test ALL functionality
@@ -15,6 +12,7 @@ const express = require("express");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
 const methodOverride = require("method-override");
+const morgan = require("morgan");
 const {
   generateRandomString,
   findUserByEmail,
@@ -29,6 +27,7 @@ app.set("view engine", "ejs");
 //*MIDDLEWARE
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(morgan(":url :date[web]"));
 app.use(
   cookieSession({
     name: "user_id",
@@ -66,6 +65,7 @@ app.post("/urls", (req, res) => {
     userID: req.session.user_id,
     totalVisits: 0,
     uniqueVisitors: 0,
+    logList: [],
   };
   res.redirect(`/urls/${id}`);
 });
@@ -102,6 +102,7 @@ app.get("/urls/:id", (req, res) => {
     user: users[req.session.user_id],
     totalVisits: urlDatabase[req.params.id].totalVisits,
     uniqueVisitors: urlDatabase[req.params.id].uniqueVisitors,
+    logList: urlDatabase[req.params.id].logList,
   };
   res.render("urls_show", templateVars);
 });
@@ -140,13 +141,12 @@ app.put("/urls/:id", (req, res) => {
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id].longURL;
   urlDatabase[req.params.id].totalVisits++;
-  // if (
-  //   !urlDatabase[req.params.id].uniqueVisitors.includes(req.session.user_id)
-  // ) {
-  //   //if the current session cookie is not in the uniqueVisitors array for this tinyURL, push it
-  //   urlDatabase[req.params.id].uniqueVisitors.push(req.session.user_id);
+  const date = new Date();
+  const visitorID = generateRandomString();
+  // if(urlDatabase[req.params.id].logList) {
+
   // }
-  console.log(urlDatabase[req.params.id]);
+  urlDatabase[req.params.id].logList.push({ date, visitorID });
   res.redirect(longURL);
 });
 
