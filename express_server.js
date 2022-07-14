@@ -4,9 +4,11 @@
   TODO: write mocha test cases for helper functions
   TODO: install method-override
   TODO: use method-override to modify relevent routes to PUT or DELETE
+  TODO: npm morgan
   TODO: keep track of how many times a given shortURL is visited and display it
   TODO: keep track of how many unique visitors visit each url and display with total visitors
   TODO: keep track of every visit and display list on URL edit page
+  TODO: use alerts instead of res.send() for displaying error messages
   TODO: add sanitization to user's email and password
   TODO: re-test ALL functionality
   TODO: clean up css and styling
@@ -17,6 +19,11 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
+const {
+  generateRandomString,
+  findUserByEmail,
+  urlsForUser,
+} = require("./helpers");
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -36,35 +43,6 @@ app.use(
 //*GLOBAL VARIABLES
 const urlDatabase = {};
 const users = {};
-
-//*HELPER FUNCTIONS
-const generateRandomString = function () {
-  let result = "";
-  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456879";
-  for (let i = 0; i < 6; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
-};
-
-const findUserByEmail = function (email) {
-  for (const i in users) {
-    if (email === users[i].email) {
-      return users[i];
-    }
-  }
-  return null;
-};
-
-const urlsForUser = function (id) {
-  const result = {};
-  for (const i in urlDatabase) {
-    if (id === urlDatabase[i].userID) {
-      result[i] = urlDatabase[i];
-    }
-  }
-  return result;
-};
 
 //*ROUTES
 app.get("/", (req, res) => {
@@ -174,8 +152,8 @@ app.get("/login", (req, res) => {
 
 //Login via email and password
 app.post("/login", (req, res) => {
-  const user = findUserByEmail(req.body.email);
-  if (user === null) {
+  const user = findUserByEmail(req.body.email, users);
+  if (!user) {
     return res.status(403).send("User not found");
   }
   if (!bcrypt.compareSync(req.body.password, user.password)) {
@@ -208,7 +186,7 @@ app.post("/register", (req, res) => {
   if (email.length === 0 || req.body.password.length === 0) {
     return res.status(400).send("Invalid Email or Password");
   }
-  if (findUserByEmail(email) !== null) {
+  if (findUserByEmail(email, users)) {
     return res.status(400).send("User already exists");
   }
   users[id] = { id, email, password };
