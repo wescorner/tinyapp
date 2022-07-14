@@ -1,3 +1,18 @@
+/*
+  !-------------------------------------------------------------------------------------------!  
+  TODO: refactor helper functions for testing
+  TODO: write mocha test cases for helper functions
+  TODO: install method-override
+  TODO: use method-override to modify relevent routes to PUT or DELETE
+  TODO: keep track of how many times a given shortURL is visited and display it
+  TODO: keep track of how many unique visitors visit each url and display with total visitors
+  TODO: keep track of every visit and display list on URL edit page
+  TODO: add sanitization to user's email and password
+  TODO: re-test ALL functionality
+  TODO: clean up css and styling
+  ? Think of new features/libraries to possibly add
+  !-------------------------------------------------------------------------------------------!
+  */
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
@@ -50,21 +65,6 @@ const urlsForUser = function (id) {
   }
   return result;
 };
-
-/*
-  !-------------------------------------------------------------------------------------------!  
-  TODO: refactor helper functions for testing
-  TODO: write mocha test cases for helper functions
-  TODO: install method-override
-  TODO: use method-override to modify relevent routes to PUT or DELETE
-  TODO: keep track of how many times a given shortURL is visited and display it
-  TODO: keep track of how many unique visitors visit each url and display with total visitors
-  TODO: keep track of every visit and display list on URL edit page
-  TODO: re-test ALL functionality
-  TODO: clean up css and styling
-  ? Think of new features/libraries to possibly add
-  !-------------------------------------------------------------------------------------------!
-  */
 
 //*ROUTES
 app.get("/", (req, res) => {
