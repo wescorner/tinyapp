@@ -19,7 +19,7 @@
   <body>
     <%- include('partials/_header') %>
     <% if (!user){ %>
-      <h3>Please Login or Register to view URL's</h3>
+      <div class="alert alert-danger" role="alert">Please Login or Register to view URLs</div>
     <% }else{ %> 
       <main style="margin: 1em;">
         <h3>My URLs</h3>
