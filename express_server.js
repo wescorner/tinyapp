@@ -1,8 +1,6 @@
 /*
   !-------------------------------------------------------------------------------------------!  
   TODO: keep track of how many unique visitors visit each url and display with total visitors
-  TODO: use alerts instead of res.send() for displaying error messages
-  TODO: add sanitization to user's email and password
   TODO: re-test ALL functionality
   TODO: clean up css and styling
   ? Think of new features/libraries to possibly add
@@ -31,6 +29,14 @@ app.use(morgan(":url :date[web]"));
 app.use(
   cookieSession({
     name: "user_id",
+    keys: ["secret"],
+    maxAge: 24 * 60 * 60 * 1000,
+  })
+);
+app.use(
+  "/u/:id",
+  cookieSession({
+    name: "visitor_id",
     keys: ["secret"],
     maxAge: 24 * 60 * 60 * 1000,
   })
@@ -139,13 +145,17 @@ app.put("/urls/:id", (req, res) => {
 
 //Redirect short URL to long URL
 app.get("/u/:id", (req, res) => {
+  let visitorID = generateRandomString();
+  //this will check if your device is a unique visitor and only increase the uniqueVisitors key if it is
+  if (!req.session.visitor_id) {
+    req.session.visitor_id = visitorID;
+    urlDatabase[req.params.id].uniqueVisitors++;
+  } else {
+    visitorID = req.session.visitor_id;
+  }
   const longURL = urlDatabase[req.params.id].longURL;
   urlDatabase[req.params.id].totalVisits++;
   const date = new Date();
-  const visitorID = generateRandomString();
-  // if(urlDatabase[req.params.id].logList) {
-
-  // }
   urlDatabase[req.params.id].logList.push({ date, visitorID });
   res.redirect(longURL);
 });
