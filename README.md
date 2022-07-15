@@ -5,12 +5,12 @@ TinyApp is a full stack web application built with Node and Express and styled w
 
 ## Final Product
 
-!["Home page when logged out"](/https://github.com/wescorner/tinyapp/docs/urls-logged-out.png)
-!["Home page when logged in with URLs"](/https://github.com/wescorner/tinyapp/docs/urls-logged-in.png)
-!["Registration page"](/https://github.com/wescorner/tinyapp/docs/register.png)
-!["Login page"](/https://github.com/wescorner/tinyapp/docs/login.png)
-!["Create URL page"](/https://github.com/wescorner/tinyapp/docs/create-url.png)
-!["Viewing details about URL"](/https://github.com/wescorner/tinyapp/docs/urls-info.png)
+!["Home page when logged out"](https://github.com/wescorner/tinyapp/blob/master/docs/create-url.png?raw=true)
+!["Home page when logged in with URLs"](/https://github.com/wescorner/tinyapp/blob/master/docs/urls-logged-in.png)
+!["Registration page"](/https://github.com/wescorner/tinyapp/blob/master/docs/register.png)
+!["Login page"](/https://github.com/wescorner/tinyapp/blob/master/docs/login.png)
+!["Create URL page"](/https://github.com/wescorner/tinyapp/blob/master/docs/create-url.png)
+!["Viewing details about URL"](/https://github.com/wescorner/tinyapp/blob/master/docs/urls-info.png)
 
 ## Dependencies
 
