@@ -16,10 +16,13 @@
     <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
-        <h5 class="card-title">TinyURL for: <%= longURL %></h5>
-        <p class="card-text">
-          Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
-        </p>
+        <div class="alert alert-primary" role="alert">
+          <h4 class="alert-heading"><%= longURL %></h4>
+            <p class="mb-0">
+              Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
+            </p>
+        </div>
+        
         <p>Total Visits: <%= totalVisits %></p>
         <p>Unique Visits: <%= uniqueVisitors %></p>
         <p>
