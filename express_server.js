@@ -1,11 +1,3 @@
-/*
-  !-------------------------------------------------------------------------------------------!  
-  TODO: keep track of how many unique visitors visit each url and display with total visitors
-  TODO: re-test ALL functionality
-  TODO: clean up css and styling
-  ? Think of new features/libraries to possibly add
-  !-------------------------------------------------------------------------------------------!
-  */
 const express = require("express");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
@@ -57,7 +49,7 @@ app.get("/urls", (req, res) => {
     urls: urlsForUser(req.session.user_id, urlDatabase),
     user: users[req.session.user_id],
   };
-  res.render("urls_index", templateVars);
+  res.render("urls_index", templateVars); //render the URL index template
 });
 
 //Add new URL
@@ -79,12 +71,12 @@ app.post("/urls", (req, res) => {
 //Show form for adding new URL
 app.get("/urls/new", (req, res) => {
   if (!req.session.user_id) {
-    return res.redirect("/login");
+    return res.redirect("/login"); //redirect to login if user is not logged in
   }
   const templateVars = {
     user: users[req.session.user_id],
   };
-  res.render("urls_new", templateVars);
+  res.render("urls_new", templateVars); //render the template for creating new URL
 });
 
 app.get("/urls.json", (req, res) => {
@@ -110,7 +102,7 @@ app.get("/urls/:id", (req, res) => {
     uniqueVisitors: urlDatabase[req.params.id].uniqueVisitors,
     logList: urlDatabase[req.params.id].logList,
   };
-  res.render("urls_show", templateVars);
+  res.render("urls_show", templateVars); //render the template for viewing single URL information
 });
 
 //Delete single URL by ID
@@ -124,7 +116,7 @@ app.delete("/urls/:id/delete", (req, res) => {
   if (req.session.user_id !== urlDatabase[req.params.id].userID) {
     return res.status(400).send("Can only delete URLs that you own");
   }
-  delete urlDatabase[req.params.id];
+  delete urlDatabase[req.params.id]; //only delete if ID exists, user is logged in, and user owns the URL ID
   res.redirect("/urls");
 });
 
@@ -139,7 +131,7 @@ app.put("/urls/:id", (req, res) => {
   if (req.session.user_id !== urlDatabase[req.params.id].userID) {
     return res.status(400).send("Can only edit URLs that you own");
   }
-  urlDatabase[req.params.id].longURL = req.body.id;
+  urlDatabase[req.params.id].longURL = req.body.id; //only update if ID exists, user is logged in, and user owns the URL ID
   res.redirect(`/urls/${req.params.id}`);
 });
 
@@ -151,12 +143,12 @@ app.get("/u/:id", (req, res) => {
     req.session.visitor_id = visitorID;
     urlDatabase[req.params.id].uniqueVisitors++;
   } else {
-    visitorID = req.session.visitor_id;
+    visitorID = req.session.visitor_id; //set the visitorID that will be pushed to the visitor_id cookie value
   }
   const longURL = urlDatabase[req.params.id].longURL;
-  urlDatabase[req.params.id].totalVisits++;
+  urlDatabase[req.params.id].totalVisits++; //increasing the number of total visits to URL
   const date = new Date();
-  urlDatabase[req.params.id].logList.push({ date, visitorID });
+  urlDatabase[req.params.id].logList.push({ date, visitorID }); //adding log with date and visitor ID to the logList array
   res.redirect(longURL);
 });
 
@@ -166,7 +158,7 @@ app.get("/login", (req, res) => {
     return res.redirect("/urls");
   }
   const templateVars = { user: users[req.session.user_id] };
-  res.render("login", templateVars);
+  res.render("login", templateVars); //render template for logging in
 });
 
 //Login via email and password
@@ -178,7 +170,7 @@ app.post("/login", (req, res) => {
   if (!bcrypt.compareSync(req.body.password, user.password)) {
     return res.status(403).send("Incorrect password");
   }
-  req.session.user_id = user.id;
+  req.session.user_id = user.id; //only login user if email exists and password is correct
   res.redirect("/urls");
 });
 
@@ -194,7 +186,7 @@ app.get("/register", (req, res) => {
     return res.redirect("/urls");
   }
   const templateVars = { user: users[req.session.user_id] };
-  res.render("register", templateVars);
+  res.render("register", templateVars); //render template for registering new user
 });
 
 //Register with email and password
@@ -208,8 +200,8 @@ app.post("/register", (req, res) => {
   if (findUserByEmail(email, users)) {
     return res.status(400).send("User already exists");
   }
-  users[id] = { id, email, password };
-  req.session.user_id = id;
+  users[id] = { id, email, password }; //only create user if email&password are valid and user doesn't exist
+  req.session.user_id = id; //login user
   res.redirect("/urls");
 });
 
