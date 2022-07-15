@@ -5,12 +5,12 @@ TinyApp is a full stack web application built with Node and Express and styled w
 
 ## Final Product
 
-!["Home page when logged out"](https://github.com/wescorner/tinyapp/blob/master/docs/create-url.png?raw=true)
+!["Home page when logged out"](https://github.com/wescorner/tinyapp/blob/master/docs/urls-logged-out.png?raw=true)
 !["Home page when logged in with URLs"](https://github.com/wescorner/tinyapp/blob/master/docs/urls-logged-in.png?raw=true)
 !["Registration page"](https://github.com/wescorner/tinyapp/blob/master/docs/register.png?raw=true)
 !["Login page"](https://github.com/wescorner/tinyapp/blob/master/docs/login.png?raw=true)
 !["Create URL page"](https://github.com/wescorner/tinyapp/blob/master/docs/create-url.png?raw=true)
-!["Viewing details about URL"](https://github.com/wescorner/tinyapp/blob/master/docs/urls-info.png?raw=true)
+!["Viewing details about URL"](https://github.com/wescorner/tinyapp/blob/master/docs/url-info.png?raw=true)
 
 ## Dependencies
 
